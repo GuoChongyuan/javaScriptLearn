@@ -28,8 +28,156 @@ js的基本语法
        要指定函数的this指向哪个对象，可以用函数本身的apply方法，它接收两个参数，第一个参数就是需要绑定的this变量，第二个参数是Array，表示函数本身的参数，call()把参数按顺序传入
        JavaScript的所有对象都是动态的，即使内置的函数，我们也可以重新指向新的函数
 
+   6. 高阶函数
+      高阶函数主要主要是由于函数也能作为参数而搞出来的，所以这里可以直接使用匿名函数类进行表达
+      重点 - lambda表达式
+      高阶函数除了可以接受函数作为参数外，还可以把函数作为结果值返回，当一个函数返回了一个函数后，其内部的局部变量还被新函数引用
+
+      闭包的作用：在没有class机制，只有函数的语言里，借助闭包，同样可以封装一个私有变量,换句话说，闭包就是携带状态的函数，并且它的状态可以完全对外隐藏起来。
+      返回闭包时牢记的一点就是：返回函数不要引用任何循环变量，或者后续会发生变化的变量
+      如果一定要引用循环变量怎么办？方法是再创建一个函数，用该函数的参数绑定循环变量当前的值，无论该循环变量后续如何更改，已绑定到函数参数的值不变
+
+      js中所谓的箭头函数就是使用lambda的形式进行表述，所以一定要学lambda表达式的写法，这样后边使用起来就会方便很多
+
+      generator函数：
+      因为generator可以在执行过程中多次返回，所以它看上去就像一个可以记住执行状态的函数，利用这一点，写一个generator就可以实现需要用面向对象才能实现的功能
+      generator还有另一个巨大的好处，就是把异步回调代码变成“同步”代码。这个好处要等到后面学了AJAX以后才能体会到。
+
+  7. RegExp
+    JavaScript有两种方式创建一个正则表达式：第一种方式是直接通过/正则表达式/写出来，第二种方式是通过new RegExp('正则表达式')创建一个RegExp对象。
+
+
 */
 /*'use strict'*/
+
+var xiaoming = {
+    name: '小明',
+    age: 14,
+    gender: true,
+    height: 1.65,
+    grade: null,
+    'middle-school': '\"W3C\" Middle School',
+    skills: ['JavaScript', 'Java', 'Python', 'Lisp']
+};
+var xiaoming1 = JSON.stringify(xiaoming,'',' ');
+//console.log(xiaoming)
+
+var obj = JSON.parse('{"name":"小明","age":14}',(key,value)=>{
+    if(key == 'name'){
+        return value + "同学";
+    }else{
+        return value;
+    }
+});
+
+console.log(JSON.stringify(obj));
+
+// generator函数
+function fib(max) {
+    var
+        a = 0,
+        b = 1,
+        arr = [0, 1];
+    while (arr.length < max) {
+        [a, b] = [b, a + b];
+        arr.push(b);
+    }
+    return arr;
+}
+fib1 = fib(10)
+
+function* fibf(max){
+    let [a,b,n] = [0,1,0];
+    while(n < max){
+        yield a;
+        [a,b] = [b,a+b];
+        n++;
+    }
+    return;
+}
+
+var fib2 = fibf(5)
+
+// 箭头函数
+var obj = {
+    birth: 1990,
+    getAge: function () {
+        var b = this.birth; // 1990
+        var fn = ()=>{new Date().getFullYear() - this.birth} // this指向window或undefined,这里的this已经被限定作用域了
+        return fn();
+    }
+};
+
+var arr5 = [10, 20, 1, 2];
+var r5 = arr5.sort((x,y)=>{
+    if(x>y){
+        return 1;
+    }else{
+        return -1;
+    }
+})
+
+// 闭包的一些case
+function create_inc(start){
+    var x = start || 0; // 在没有class机制，只有函数的语言里，借助闭包，同样可以封装一个私有变量
+    return {
+        inc:function (){
+            x = x + 1;
+            return x;
+        }
+    }
+}
+
+var c1 = create_inc(10);
+//console.log(c1.inc())
+//console.log(c1.inc())
+//console.log(c1.inc())
+
+function count(){
+    var arr=[];
+    for (let i = 0; i <= 3; i++) {
+        arr.push(function (){
+            return i * i;
+        });
+    }
+
+    return arr;
+}
+
+var results = count();
+var f1 = results[0];
+var f2 = results[1];
+var f3 = results[2];
+
+// 高阶函数的一些case
+var arr1 = [1, 2, 4, 5, 6, 9, 10, 15];
+var r1 = arr1.filter(function (x){
+    return x % 2 !=0;
+})
+
+var arr2 = ['apple', 'Strawberry', 'banana', 'pear', 'apple', 'orange', 'orange', 'strawberry'];
+var r2 = arr2.filter(function (value,index,arr){
+    return arr.indexOf(value) === index;
+})
+
+var arr3 = [10, 20, 1, 2];
+r3 = arr3.sort(function (x,y){
+    if(x > y){
+        return 1;
+    }else{
+        return -1;
+    }
+})
+
+var r4 = arr2.every(function (value) {
+    return value.toLowerCase() === value;
+})
+
+arr2.forEach(function (value){
+   // console.log(value)
+})
+
+// js基础学习
 
 var a=[1,2,3]
 var b = new Array(1,2,3)
@@ -44,7 +192,7 @@ var name = '小明';
 var age = 20;
 var arr = ['Bart', 'Lisa', 'Adam',"test","test1"];
 for (var key of arr){
-    console.log(key)
+   // console.log(key)
 }
 
 
@@ -57,7 +205,6 @@ function abs(x) {
 }
 
 var absRes = abs(10,1)
-console.log(absRes)
 
 var person = {
     name1: '小明',
