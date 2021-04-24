@@ -62,13 +62,40 @@ js的基本语法
     在strict模式下，this.name = name将报错，因为this绑定为undefined，在非strict模式下，this.name = name不报错，因为this绑定为window，于是无意间创建了全局变量name，并且返回undefined，这个结果更糟糕。
     所以，调用构造函数千万不要忘记写new。为了区分普通函数和构造函数，按照约定，构造函数首字母应当大写，而普通函数首字母应当小写，这样，一些语法检查工具如jslint将可以帮你检测到漏写的new
 
-    原型继承：https://www.liaoxuefeng.com/wiki/1022910821149312/1023021997355072
+    原型继承：https://www.liaoxuefeng.com/wiki/1022910821149312/1023021997355072(本质还是new出来的对象指向原型对象的property属性)
+
+    class继承
+
 
 
 
 
 */
 /*'use strict'*/
+
+class Student1 {
+    constructor(name) {
+        this.name = name;
+    }
+    hello(){
+        console.log("my name is" + this.name);
+    }
+}
+
+let xiaohong = new Student1("xiaohong");
+
+class StudentExt extends Student1{
+    constructor(name,grade) {
+        super(name);
+        this.grade = grade;
+    }
+
+    hello() {
+        console.log("name=" + this.name +"grade =" + this.grade)
+    }
+}
+
+let xiaohong1 = new StudentExt("xiaohong1",90);
 
 var Student = {
     name: '小明',
