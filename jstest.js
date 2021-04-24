@@ -46,9 +46,51 @@ js的基本语法
   7. RegExp
     JavaScript有两种方式创建一个正则表达式：第一种方式是直接通过/正则表达式/写出来，第二种方式是通过new RegExp('正则表达式')创建一个RegExp对象。
 
+  8. 面向对象对象编程
+    JavaScript不区分类和实例的概念，而是通过原型（prototype）来实现面向对象编程。
+    xiaoming.__proto__ = Student，把xiaoming的原型指向了对象Student，看上去xiaoming仿佛是从Student继承下来的
+    JavaScript的原型链和Java的Class区别就在，它没有“Class”的概念，所有对象都是实例，所谓继承关系不过是把一个对象的原型指向另一个对象而已
+    请注意，上述代码仅用于演示目的。在编写JavaScript代码时，不要直接用obj.__proto__去改变一个对象的原型，并且，低版本的IE也无法使用__proto__。
+    Object.create()方法可以传入一个原型对象，并创建一个基于该原型的新对象，但是新对象什么属性都没有
+
+    当我们用obj.xxx访问一个对象的属性时，JavaScript引擎先在当前对象上查找该属性，如果没有找到，就到其原型对象上找，如果还没有找到，就一直上溯到Object.prototype对象，最后，如果还没有找到，就只能返回undefined
+
+    构造函数：在JavaScript中，可以用关键字new来调用这个函数，并返回一个对象
+    注意，如果不写new，这就是一个普通函数，它返回undefined。但是，如果写了new，它就变成了一个构造函数，它绑定的this指向新创建的对象，并默认返回this，也就是说，不需要在最后写return this;
+
+    如果一个函数被定义为用于创建对象的构造函数，但是调用时忘记了写new怎么办？
+    在strict模式下，this.name = name将报错，因为this绑定为undefined，在非strict模式下，this.name = name不报错，因为this绑定为window，于是无意间创建了全局变量name，并且返回undefined，这个结果更糟糕。
+    所以，调用构造函数千万不要忘记写new。为了区分普通函数和构造函数，按照约定，构造函数首字母应当大写，而普通函数首字母应当小写，这样，一些语法检查工具如jslint将可以帮你检测到漏写的new
+
+    原型继承：https://www.liaoxuefeng.com/wiki/1022910821149312/1023021997355072
+
+
+
 
 */
 /*'use strict'*/
+
+var Student = {
+    name: '小明',
+    age: 14,
+    gender: true,
+    height: 1.65,
+    grade: null,
+    'middle-school': '\"W3C\" Middle School',
+    skills: ['JavaScript', 'Java', 'Python', 'Lisp']
+};
+
+Student.prototype.hello = function () { // 类的方法绑定
+    alert('Hello, ' + this.name + '!');
+};
+
+function createStudent(name) {
+    var s= Object.create(Student);
+    s.name = "test";
+    return s;
+}
+
+Function.prototype
 
 var xiaoming = {
     name: '小明',
@@ -59,6 +101,8 @@ var xiaoming = {
     'middle-school': '\"W3C\" Middle School',
     skills: ['JavaScript', 'Java', 'Python', 'Lisp']
 };
+
+
 var xiaoming1 = JSON.stringify(xiaoming,'',' ');
 //console.log(xiaoming)
 
