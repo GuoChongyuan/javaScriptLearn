@@ -66,6 +66,44 @@ js的基本语法
 
     class继承
 
+  9. 操作表单
+    获得了一个<input>节点的引用，就可以直接调用value获得对应的用户输入值
+    对于单选框和复选框，value属性返回的永远是HTML预设的值，而我们需要获得的实际是用户是否“勾上了”选项，所以应该用checked判断
+    <form id="test-form" onsubmit="return checkForm()"> checkForm中可以写代码进行提交之前的校验
+    没有name属性的<input>的数据不会被提交
+
+    在HTML表单中，可以上传文件的唯一控件就是<input type="file">。
+    注意：当一个表单包含<input type="file">时，表单的enctype必须指定为multipart/form-data，method必须指定为post，浏览器才能正确编码并以multipart/form-data格式发送表单的数据。
+    出于安全考虑，浏览器只允许用户点击<input type="file">来选择本地文件，用JavaScript对<input type="file">的value赋值是没有任何效果的。当用户选择了上传某个文件后，JavaScript也无法获得该文件的真实路径
+
+
+  10.Ajax - 异步请求数据的web开发技术，Ajax就是让浏览器当主线程完成后去干别的事情,比如发送请求,加载接口数据等等（https://www.cnblogs.com/qisexin/p/13431689.html）
+    AJAX请求是异步执行的，也就是说，要通过回调函数获得响应。
+    异步操作只是手动的实现改变函数的调用顺序。不会进入任务队列。
+    常见的异步操作是回调函数/事件监听模式/发布订阅模式；
+    异步操作又可以分为串行异步/并行异步/串并行结合异步；
+    http://c.biancheng.net/js/ajax/
+    在JavaScript的世界中，所有代码都是单线程执行的。由于这个“缺陷”，导致JavaScript的所有网络操作，浏览器事件，都必须是异步执行
+    组合使用Promise，就可以把很多异步任务以并行和串行的方式组合起来执行。
+
+  11. jquery
+    jQuery这么流行，肯定是因为它解决了一些很重要的问题。实际上，jQuery能帮我们干这些事情：
+    消除浏览器差异：你不需要自己写冗长的代码来针对不同的浏览器来绑定事件，编写AJAX等代码；
+    简洁的操作DOM的方法：写$('#test')肯定比document.getElementById('test')来得简洁；
+    轻松实现动画、修改CSS等各种操作。
+    jQuery的理念“Write Less, Do More“，让你写更少的代码，完成更多的工作！
+
+    $本质上就是一个函数，但是函数也是对象，于是$除了可以直接调用外，也可以有很多其他属性。
+    注意，你看到的$函数名可能不是jQuery(selector, context)，因为很多JavaScript压缩工具可以对函数名和参数改名，所以压缩过的jQuery源码$函数可能变成a(b, c)。
+
+    选择器是jQuery的核心。一个选择器写出来类似$('#dom-id')。
+    jQuery的选择器就是帮助我们快速定位到一个或多个DOM节点。
+    选出来的元素是按照它们在HTML中出现的顺序排列的，而且不会有重复元素
+
+    jQuery对象和DOM对象之间可以互相转化
+        var div = $('#abc'); // jQuery对象
+        var divDom = div.get(0); // 假设存在div，获取第1个DOM元素
+        var another = $(divDom); // 重新把DOM包装为jQuery对象
 
 
 
@@ -73,13 +111,48 @@ js的基本语法
 */
 /*'use strict'*/
 
+function test(resolve, reject) {
+    var timeOut = Math.random() * 2;
+    console.log('set timeout to: ' + timeOut + ' seconds.');
+    setTimeout(function () {
+        if (timeOut < 1) {
+            resolve('200 OK');
+        }
+        else {
+            reject('timeout in ' + timeOut + ' seconds.');
+        }
+    }, timeOut * 1000);
+}
+var p1 = new Promise(test);
+var p2 = p1.then(function (result) {
+    console.log('成功：' + result);
+});
+var p3 = p2.catch(function (reason) {
+    console.log('失败：' + reason);
+});
+
+
 class Student1 {
     constructor(name) {
         this.name = name;
     }
-    hello(){
-        console.log("my name is" + this.name);
+}
+
+//把JSON数据转换为串行字符串
+//参数：data表示数组或对象类型的数据
+//返回值：串行字符串
+function JSONtoString (data) {
+    var a = [];  //临时数组
+    if (data.constructor == Array) {  //处理数组
+        for (var i = 0; i < data.length; i ++) {
+            a.push(data[i].name + "=" + encodeURIComponent(data[i].value));
+        }
+    } else {  //处理对象
+        for (var i in data) {
+            a.push(i + "=" + encodeURIComponent(data[i]));
+        }
     }
+    return a.join("&");  //把数组转换为串行字符串，并返回
 }
 
 let xiaohong = new Student1("xiaohong");
@@ -88,10 +161,6 @@ class StudentExt extends Student1{
     constructor(name,grade) {
         super(name);
         this.grade = grade;
-    }
-
-    hello() {
-        console.log("name=" + this.name +"grade =" + this.grade)
     }
 }
 
@@ -105,10 +174,6 @@ var Student = {
     grade: null,
     'middle-school': '\"W3C\" Middle School',
     skills: ['JavaScript', 'Java', 'Python', 'Lisp']
-};
-
-Student.prototype.hello = function () { // 类的方法绑定
-    alert('Hello, ' + this.name + '!');
 };
 
 function createStudent(name) {
