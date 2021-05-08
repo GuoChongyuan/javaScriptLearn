@@ -28,7 +28,7 @@
         <button type="button" onclick="doSubmitForm()">Submit</button>
     </form>
 
-    <form method="post" action="http://localhost/test" enctype="multipart/form-data">
+    <form method="post" action="http://localhost/test" enctype="multipart/form-data" name="upload">
         <p>图片预览：</p>
         <p></p><div id="test-image-preview" style="border: 1px solid #ccc; width: 100%; height: 200px; background-size: contain; background-repeat: no-repeat; background-position: center center;"></div><p></p>
         <p>
@@ -37,7 +37,13 @@
         <p id="test-file-info"></p>
     </form>
     <canvas id="test-canvas" width="300" height="200"></canvas>
-
+    <div class="testing">
+        <ul class="lang">
+            <li class="lang-javascript">JavaScript</li>
+            <li class="lang-python">Python</li>
+            <li class="lang-lua">Lua</li>
+        </ul>
+    </div>
     <script>
         var divs = $('#test-div')
     </script>

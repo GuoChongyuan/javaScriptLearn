@@ -98,12 +98,23 @@ js的基本语法
 
     选择器是jQuery的核心。一个选择器写出来类似$('#dom-id')。
     jQuery的选择器就是帮助我们快速定位到一个或多个DOM节点。
-    选出来的元素是按照它们在HTML中出现的顺序排列的，而且不会有重复元素
+    多项选择器选出来的元素是按照它们在HTML中出现的顺序排列的，而且不会有重复元素
+    子选择器$('parent>child')类似层级选择器，但是限定了层级关系必须是父子关系，就是<child>节点必须是<parent>节点的直属子节点
+    过滤器
+        $('ul.lang li:first-child'); // 仅选出JavaScript
+        $('ul.lang li:last-child'); // 仅选出Lua
+        $('ul.lang li:nth-child(2)'); // 选出第N个元素，N从1开始
+        $('ul.lang li:nth-child(even)'); // 选出序号为偶数的元素
+        $('ul.lang li:nth-child(odd)'); // 选出序号为奇数的元素
 
     jQuery对象和DOM对象之间可以互相转化
         var div = $('#abc'); // jQuery对象
         var divDom = div.get(0); // 假设存在div，获取第1个DOM元素
         var another = $(divDom); // 重新把DOM包装为jQuery对象
+
+    jQuery对象的另一个好处是我们可以执行一个操作，作用在对应的一组DOM节点上。即使选择器没有返回任何DOM节点，调用jQuery对象的方法仍然不会报错,这意味着jQuery帮你免去了许多if语句
+
+    https://www.liaoxuefeng.com/wiki/1022910821149312/1025427850131520
 
 
 
