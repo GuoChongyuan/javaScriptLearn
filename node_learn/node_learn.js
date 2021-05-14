@@ -61,7 +61,7 @@ fs.readFile('node_learn/hello.js', 'utf-8', function (err, data) {
     }
 });
 
-/*var http = require('http');
+var http = require('http');
 
 // 创建http server，并传入回调函数:
 var server = http.createServer(function (request, response) {
@@ -77,7 +77,7 @@ var server = http.createServer(function (request, response) {
 });
 
 // 让服务器监听8080端口:
-server.listen(8080);*/
+server.listen(8080);
 
 var url = require('url');
 
